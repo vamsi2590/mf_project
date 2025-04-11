@@ -75,13 +75,44 @@ TEMPLATES = [
     },
 ]
 
+
+
+
+
+
+
+
+
+
 STATIC_URL = '/static/'
 BASE_DIR = Path(__file__).resolve().parent.parent
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_DIR=BASE_DIRR/'static'
 
-STATICFILES_DIRS=[STATIC_DIR]
+
+# The absolute path to the directory where collectstatic will collect static files for deployment
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Additional directories to search for static files
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, '../static'),  # Points to the static folder outside your project
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 WSGI_APPLICATION = 'mf_project.wsgi.application'
 
 
