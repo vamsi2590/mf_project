@@ -73,9 +73,15 @@ TEMPLATES = [
         },
     },
 ]
+import os
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'mf_app' / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # for collectstatic
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+
+
+
+
 
 WSGI_APPLICATION = 'mf_project.wsgi.application'
 
