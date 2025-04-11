@@ -75,19 +75,12 @@ TEMPLATES = [
     },
 ]
 
-
+STATIC_URL = '/static/' 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-STATIC_URL = '/static/'
+STATIC_DIR=BASE_DIRR/'static'
 
-
-
-# Add this so Django knows where to find static files during development
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'mf_app', 'static'),
-]
-
-
+STATICFILES_DIRS=[STATIC_DIR]
 WSGI_APPLICATION = 'mf_project.wsgi.application'
 
 
@@ -149,7 +142,7 @@ LOGOUT_REDIRECT_URL = 'home'      # After logout, go to home
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
