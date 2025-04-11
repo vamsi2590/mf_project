@@ -75,12 +75,12 @@ TEMPLATES = [
     },
 ]
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = '/static/'
 
-# This is where collectstatic will collect all static files
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Add this so Django knows where to find static files during development
 STATICFILES_DIRS = [
