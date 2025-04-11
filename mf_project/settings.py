@@ -75,6 +75,7 @@ TEMPLATES = [
 ]
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'mf_app' / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 WSGI_APPLICATION = 'mf_project.wsgi.application'
 
