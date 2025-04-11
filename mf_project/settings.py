@@ -75,8 +75,9 @@ TEMPLATES = [
     },
 ]
 
-STATIC_URL = '/static/' 
+STATIC_URL = '/static/'
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_DIR=BASE_DIRR/'static'
 
