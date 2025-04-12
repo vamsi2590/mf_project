@@ -114,21 +114,16 @@ WSGI_APPLICATION = 'mf_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# settings.py
+
 DATABASES = {
     'default': {
-        'ENGINE': 'mssql',
-        'NAME': 'Mutualfunddb',  # Database name
-        'USER': '',              # Leave empty for Windows authentication
-        'PASSWORD': '',          # Leave empty for Windows authentication
-        'HOST': 'vamsi\\SQLEXPRESS',  # Hostname with instance
-        'PORT': '',             # Leave empty for default port
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-            'trusted_connection': 'yes',  # Windows authentication
-            'extra_params': 'TrustServerCertificate=yes',  # For development only
-        },
-        'TIME_ZONE': 'UTC',     # Recommended timezone setting
-        'CONN_MAX_AGE': 600,    # Connection persistence (optional)
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Mutualfunddb',  # Your PostgreSQL database name
+        'USER': 'postgres',  # PostgreSQL username
+        'PASSWORD': 'voyBquxYBIzeUQipMNtlEoaSRxnpOTQt',  # PostgreSQL password
+        'HOST': 'ballast.proxy.rlwy.net',  # PostgreSQL host
+        'PORT': '46113',  # PostgreSQL port (from your provided info)
     }
 }
 

@@ -65,6 +65,7 @@ platformdirs==4.3.7
 plotly==6.0.1
 prompt_toolkit==3.0.50
 protobuf==5.29.4
+psycopg2==2.9.10
 pyarrow==19.0.1
 pycparser==2.22
 pydeck==0.9.1
@@ -107,4 +108,3 @@ websocket-client==1.8.0
 wrapt==1.17.2
 wsproto==1.2.0
 yfinance==0.2.55
-gunicorn
