@@ -7,39 +7,42 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .forms import CustomUserCreationForm
 from django.http import JsonResponse
 
-# views.py
-import pyodbc
 import pandas as pd
 from datetime import timedelta
 from django.shortcuts import render
+from django.db import connection
 import plotly.express as px
 from plotly.offline import plot
 
-# DB connection
+# DB connection (PostgreSQL)
 def get_connection():
-    return pyodbc.connect(
-        r"Driver={SQL Server};Server=vamsi\SQLEXPRESS;Database=Mutualfunddb;Trusted_Connection=yes;"
-    )
+    # We are using Django's database connection here, which will be configured in settings.py
+    return connection.cursor()
 
 def get_all_scheme_codes():
-    conn = get_connection()
-    query = "SELECT scheme_code, scheme_name FROM Scheme_Details ORDER BY scheme_name"
-    df = pd.read_sql(query, conn)
-    conn.close()
+    # Using Django's database connection to fetch scheme details
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT scheme_code, scheme_name FROM Scheme_Details ORDER BY scheme_name")
+        rows = cursor.fetchall()  # Fetch all rows returned by the query
+        # Converting the result into a DataFrame for further manipulation
+        df = pd.DataFrame(rows, columns=["scheme_code", "scheme_name"])
     return df
 
 def get_nav_data(scheme_code):
-    conn = get_connection()
-    query = f"""
-    SELECT nav.nav_date, nav.nav
-    FROM Scheme_Details sd
-    JOIN MutualFund_NAV nav ON sd.scheme_details_id = nav.scheme_code_id
-    WHERE sd.scheme_code = {scheme_code}
-    ORDER BY nav.nav_date ASC;
-    """
-    df = pd.read_sql(query, conn)
-    conn.close()
-    df['nav_date'] = pd.to_datetime(df['nav_date'])
+    # Fetching NAV data for a particular scheme
+    with connection.cursor() as cursor:
+        query = f"""
+        SELECT nav.nav_date, nav.nav
+        FROM Scheme_Details sd
+        JOIN MutualFund_NAV nav ON sd.scheme_details_id = nav.scheme_code_id
+        WHERE sd.scheme_code = {scheme_code}
+        ORDER BY nav.nav_date ASC;
+        """
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        # Converting the result into a DataFrame
+        df = pd.DataFrame(rows, columns=["nav_date", "nav"])
+        df['nav_date'] = pd.to_datetime(df['nav_date'])  # Converting nav_date to datetime
     return df
 
 def calculate_performance(df, start_date, end_date):
@@ -58,8 +61,9 @@ def calculate_performance(df, start_date, end_date):
     return f"{percent_change:.2f}%", f"{change:.2f}", color
 
 def purchase_tracker(request):
+    # Fetch all scheme codes and names
     scheme_df = get_all_scheme_codes()
-    schemes = scheme_df.to_dict(orient='records')
+    schemes = scheme_df.to_dict(orient='records')  # Convert DataFrame to a dictionary
     selected_scheme = request.GET.get("scheme")
 
     context = {
@@ -67,9 +71,11 @@ def purchase_tracker(request):
         "selected_scheme": selected_scheme,
     }
 
+    # If a scheme is selected, fetch its NAV data
     if selected_scheme:
         scheme_code = scheme_df[scheme_df['scheme_name'] == selected_scheme]['scheme_code'].values[0]
         nav_df = get_nav_data(scheme_code)
+
         if not nav_df.empty:
             min_date = nav_df['nav_date'].min()
             max_date = nav_df['nav_date'].max()
