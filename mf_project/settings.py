@@ -119,13 +119,14 @@ WSGI_APPLICATION = 'mf_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Mutualfunddb',  # Your PostgreSQL database name
-        'USER': 'postgres',  # PostgreSQL username
-        'PASSWORD': 'voyBquxYBIzeUQipMNtlEoaSRxnpOTQt',  # PostgreSQL password
-        'HOST': 'ballast.proxy.rlwy.net',  # PostgreSQL host
-        'PORT': '46113',  # PostgreSQL port (from your provided info)
+        'NAME': 'railway',  # ✅ This is the correct DB name
+        'USER': 'postgres',
+        'PASSWORD': 'voyBquxYBIzeUQipMNtlEoaSRxnpOTQt',
+        'HOST': 'ballast.proxy.rlwy.net',
+        'PORT': '46113',
     }
 }
+
 
 
 # Password validation
