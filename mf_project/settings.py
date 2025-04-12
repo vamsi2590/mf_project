@@ -86,16 +86,12 @@ TEMPLATES = [
 
 STATIC_URL = '/static/'
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_DIR=BASE_DIRR/'static'
+STATICFILES_DIRS=[STATIC_DIR]
 
 
-
-# The absolute path to the directory where collectstatic will collect static files for deployment
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-# Additional directories to search for static files
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../static'),  # Points to the static folder outside your project
-]
 
 
 
@@ -118,17 +114,21 @@ WSGI_APPLICATION = 'mf_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'Mutualfunddb',
-        'HOST': 'vamsi\\SQLEXPRESS',
-        'PORT': '',
+        'NAME': 'Mutualfunddb',  # Database name
+        'USER': '',              # Leave empty for Windows authentication
+        'PASSWORD': '',          # Leave empty for Windows authentication
+        'HOST': 'vamsi\\SQLEXPRESS',  # Hostname with instance
+        'PORT': '',             # Leave empty for default port
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
-            'trusted_connection': 'yes',
+            'trusted_connection': 'yes',  # Windows authentication
+            'extra_params': 'TrustServerCertificate=yes',  # For development only
         },
+        'TIME_ZONE': 'UTC',     # Recommended timezone setting
+        'CONN_MAX_AGE': 600,    # Connection persistence (optional)
     }
 }
 
