@@ -52,11 +52,8 @@ def calculate_performance(df, start_date, end_date):
     percent_change = (change / start_nav) * 100
     color = "positive" if percent_change >= 0 else "negative"
     return f"{percent_change:.2f}%", f"{change:.2f}", color
-
-# In your views.py
 def purchase_tracker(request):
-    # Fetch all scheme codes and names
-    scheme_df = SchemeDetails.get_all_schemes_df()
+    scheme_df = get_all_scheme_codes()
     schemes = scheme_df.to_dict(orient='records')
 
     selected_scheme = request.GET.get("scheme")
@@ -65,17 +62,6 @@ def purchase_tracker(request):
         "selected_scheme": selected_scheme,
     }
 
-    if selected_scheme:
-        scheme_code = scheme_df[scheme_df['scheme_name'] == selected_scheme]['scheme_code'].values[0]
-        nav_df = MutualFundNAV.get_nav_data_df(scheme_code)
-
-        if not nav_df.empty:
-            # ... rest of your view logic ...
-            # Use MutualFundNAV.calculate_performance() for performance calculations
-            total_percent, total_change, total_color = MutualFundNAV.calculate_performance(
-                nav_df, purchase_date, max_date
-            )
-    # If a scheme is selected, fetch its NAV data
     if selected_scheme:
         try:
             scheme_code = scheme_df[scheme_df['scheme_name'] == selected_scheme]['scheme_code'].values[0]
@@ -90,13 +76,9 @@ def purchase_tracker(request):
                     try:
                         purchase_date = pd.to_datetime(user_date)
                         if purchase_date < min_date or purchase_date > max_date:
-                            context["error"] = "Purchase date must be between {} and {}".format(
-                                min_date.strftime("%d %b, %Y"),
-                                max_date.strftime("%d %b, %Y")
-                            )
+                            context["error"] = f"Purchase date must be between {min_date.strftime('%d %b, %Y')} and {max_date.strftime('%d %b, %Y')}"
                         else:
-                            user_nav_df = nav_df[(nav_df['nav_date'] >= purchase_date) &
-                                               (nav_df['nav_date'] <= max_date)]
+                            user_nav_df = nav_df[(nav_df['nav_date'] >= purchase_date) & (nav_df['nav_date'] <= max_date)]
 
                             if not user_nav_df.empty:
                                 current_nav = user_nav_df['nav'].iloc[-1]
@@ -104,7 +86,6 @@ def purchase_tracker(request):
                                     nav_df, purchase_date, max_date
                                 )
 
-                                # Timeframe performance
                                 timeframes = [
                                     ("1M", "1 Month", timedelta(days=30)),
                                     ("3M", "3 Months", timedelta(days=90)),
@@ -127,7 +108,6 @@ def purchase_tracker(request):
                                         "color": color or "neutral"
                                     })
 
-                                # Plotly chart
                                 fig = px.line(user_nav_df, x='nav_date', y='nav')
                                 fig.add_vline(
                                     x=purchase_date.timestamp() * 1000,
@@ -173,6 +153,8 @@ def purchase_tracker(request):
             context["error"] = f"Error processing scheme data: {str(e)}"
 
     return render(request, "mf_app/purchase_tracker.html", context)
+
+
 
 
 def signup_view(request):
